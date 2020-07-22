@@ -19,7 +19,7 @@
 <body>
 <div class="container">
     <h2>Liste des employes</h2>
-    <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
+    <button type="button" class="btn btn-primary mb-2 nouveau" data-toggle="modal" data-target="#exampleModal">
         Enregistrer un employe
     </button>
 
@@ -44,7 +44,7 @@
                     <td>${employe.poste}</td>
                     <td>${employe.salaire}</td>
                     <td>${employe.service.libelle}</td>
-                    <td> <a href="" role="button" data-toggle="modal" data-target="#exampleModal" data-target-id="${employe.id}" id="edit" class="btn btn-primary">editer</a> </td>
+                    <td> <a href="" role="button" data-toggle="modal" data-target="#exampleModal" data-target-id="${employe.id}" class="btn btn-primary edit">editer</a> </td>
                     <td><a href="" role="button" class="btn btn-danger">supprimer</a></td>
                 </tr>
             </c:forEach>
@@ -63,7 +63,8 @@
                 </div>
                 <div class="modal-body">
                     <form method="post" action="${pageContext.request.contextPath}/employe">
-                        <input type="hidden" name="action" value="add">
+                        <input type="text" name="action" id="action" value="add">
+                        <input type="text" name="employe_id" value="0" id="employe_id">
                         <div class="form-group row">
                             <label for="nom" class="col-sm-2 col-form-label">Prenom Nom</label>
                             <div class="col-sm-10">
@@ -108,7 +109,11 @@
 <script>
     $(document).ready(
         function () {
-            $("#edit").click(function(){
+            $(".nouveau").click(function () {
+                $("#action").val("add")
+                $("#employe_id").val(0)
+            })
+            $(".edit").click(function(){
                 var id = $(this).attr("data-target-id")
                 console.log(id)
                 $.ajax({
@@ -123,6 +128,8 @@
                         $("#poste").val(data.poste)
                         $("#salaire").val(data.salaire)
                         $("#service").val(data.service.id)
+                        $("#employe_id").val(data.id)
+                        $("#action").val("update")
                     },
                     error: function (err) {
                         console.log(err)

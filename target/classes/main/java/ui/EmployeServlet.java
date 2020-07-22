@@ -28,19 +28,18 @@ public class EmployeServlet extends HttpServlet {
             int salaire = Integer.parseInt(req.getParameter("salaire"));
             int service = Integer.parseInt(req.getParameter("service"));
             Employe employe = new Employe();
+            if(action.equals("update")){
+                employe = employeDao.findById(Integer.parseInt(req.getParameter("employe_id")));
+            }
             employe.setNomComplet(nom);
             employe.setPoste(poste);
             employe.setSalaire(salaire);
             employe.setService(serviceDao.findById(service));
-            switch (action) {
-                case "add":
-                    employeDao.save(employe);
-                    req.setAttribute("services",serviceDao.findAll());
-                    req.setAttribute("employes",employeDao.findAll());
-                    getServletContext().getRequestDispatcher("/WEB-INF/employe.jsp").forward(req,resp);
-                    resp.getWriter().println("ok");
-                    break;
-            }
+
+            employeDao.save(employe);
+            req.setAttribute("services",serviceDao.findAll());
+            req.setAttribute("employes",employeDao.findAll());
+            getServletContext().getRequestDispatcher("/WEB-INF/employe.jsp").forward(req,resp);
         }
     }
 

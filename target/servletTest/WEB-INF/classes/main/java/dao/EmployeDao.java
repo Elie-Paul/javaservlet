@@ -3,6 +3,7 @@ package dao;
 import model.Employe;
 import model.Service;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import utils.HibernateUtil;
 
 import javax.ejb.Stateless;
@@ -22,10 +23,14 @@ public class EmployeDao implements IEmploye {
 
     @Override
     public Employe save(Employe e) {
+        Transaction transaction = session.getTransaction();
         try {
-            session.save(e);
+            transaction.begin();
+            session.saveOrUpdate(e);
+            transaction.commit();
             return e;
         }catch (Exception ex){
+            transaction.rollback();
             ex.printStackTrace();
         }
         return null;
